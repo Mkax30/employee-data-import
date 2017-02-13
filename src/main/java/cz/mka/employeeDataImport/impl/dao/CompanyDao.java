@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -51,6 +52,12 @@ public class CompanyDao {
 
     public Company getCompanyByIco(Integer ico) {
         Query query = em.createQuery("from Company where ico = :ico").setParameter("ico", ico);
-        return (Company) query.getSingleResult();
+        Company result;
+        try {
+            result = (Company) query.getSingleResult();
+        } catch(NoResultException e) {
+            return null;
+        }
+        return result;
     }
 }

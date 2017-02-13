@@ -71,12 +71,13 @@ public class CompanyRest {
 
     // test method for process import csv file
     @RequestMapping(path = "importCsv", method = RequestMethod.GET)
-    public void testProcessCsv() {
+    public ResponseEntity testProcessCsv() {
 
         List<Input> inputList = csvProcessingService.importData();
 
         csvProcessingService.saveData(inputList);
 
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

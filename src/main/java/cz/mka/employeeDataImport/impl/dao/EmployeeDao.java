@@ -4,8 +4,10 @@ import cz.mka.employeeDataImport.api.model.Employee;
 import cz.mka.employeeDataImport.impl.model.OutputEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 
@@ -23,11 +25,13 @@ public class EmployeeDao {
         return (List<OutputEmployee>) query.getResultList();
     }
 
+    @Transactional
     public Employee saveEmployee(Employee employee) {
         em.persist(employee);
         return getEmployee(employee.getId());
     }
 
+    @Transactional
     public Employee updateEmployee(Employee employee) {
         em.merge(employee);
         return getEmployee(employee.getId());
@@ -43,6 +47,12 @@ public class EmployeeDao {
 
     public Employee getEmployeeByEmail(String employeeEmail) {
         Query query = em.createQuery("from Employee where email = :email").setParameter("email", employeeEmail);
-        return (Employee) query.getSingleResult();
+        Employee result;
+        try {
+            result = (Employee) query.getSingleResult();
+        } catch(NoResultException e) {
+            return null;
+        }
+        return result;
     }
 }

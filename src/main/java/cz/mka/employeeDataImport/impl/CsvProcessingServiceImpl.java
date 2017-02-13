@@ -52,7 +52,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         columnMapping.put("email", "employeeEmail");
         columnMapping.put("firstName", "employeeFirstName");
         columnMapping.put("lastName", "employeeLastName");
-        columnMapping.put("updated", "dateLastUpdate");
+        columnMapping.put("updated", "lastUpdate");
         mappingStrategy.setColumnMapping(columnMapping);
 
         CsvToBean ctb = new CsvToBean();
@@ -151,7 +151,14 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
     }
 
     private void showStatistics() {
-        new Statistics(employeesInserted, employeesUpdated, companiesInserted, companiesUpdated, duplicitiesFound, notProcessed).toString();
+        System.out.println(
+                new Statistics(
+                        employeesInserted,
+                        employeesUpdated,
+                        companiesInserted,
+                        companiesUpdated,
+                        duplicitiesFound,
+                        notProcessed).toString());
     }
 }
 

@@ -14,6 +14,7 @@ public class Input {
     private String employeeFirstName;
     private String employeeLastName;
     private LocalDateTime dateLastUpdate;
+    private String lastUpdate;
 
     public Integer getCompanyIco() {
         return companyIco;
@@ -64,10 +65,21 @@ public class Input {
     }
 
     public LocalDateTime getDateLastUpdate() {
+        if (dateLastUpdate == null) {
+            return LocalDateTime.parse(lastUpdate);
+        }
         return dateLastUpdate;
     }
 
     public void setDateLastUpdate(LocalDateTime dateLastUpdate) {
         this.dateLastUpdate = dateLastUpdate;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }
