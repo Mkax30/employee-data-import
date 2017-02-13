@@ -1,0 +1,192 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2017-02-13T17:19:48.036Z",
+	"__export_source": "insomnia.desktop.app:v4.2.11",
+	"resources": [
+		{
+			"_id": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"parentId": null,
+			"modified": 1477067911679,
+			"created": 1477055113490,
+			"name": "Insomnia",
+			"description": "",
+			"certificates": [],
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_iujshdzd5G2SE6f7Pk7ddJzk",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1486911526111,
+			"created": 1477055121673,
+			"name": "Base Environment",
+			"data": {},
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_iujsil28VaBrrtN5rujNx6PC",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1477055177504,
+			"created": 1477055177504,
+			"name": "Default Jar",
+			"cookies": [],
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "req_000ab2aaa1f440e1b8c9173d0e99ddc5",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487001615724,
+			"created": 1486938353229,
+			"url": "localhost:8080/employee-processing/importCsv",
+			"name": "test import csv",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -1477067669472.164,
+			"_type": "request"
+		},
+		{
+			"_id": "req_2c36a1eb705e473db710005ae335e294",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487004998961,
+			"created": 1486911985445,
+			"url": "localhost:8080/employee-processing/companies",
+			"name": "save company",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"title\": \"TopMonks s.r.o\",\n\t\"ico\": 24877437,\n\t\"address\": \"Struhařovská 2931/9 140 00 Praha 4\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1477067669475,
+			"_type": "request"
+		},
+		{
+			"_id": "req_4d6583093240476c80e588d5b10a5a1e",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487001599540,
+			"created": 1486915809773,
+			"url": "localhost:8080/employee-processing/companies/1",
+			"name": "get company",
+			"method": "GET",
+			"body": {},
+			"parameters": [
+				{
+					"name": "",
+					"value": "",
+					"disabled": false
+				}
+			],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -1477067669473.1875,
+			"_type": "request"
+		},
+		{
+			"_id": "req_8c9d1e4fa14048b793af0298f2aef687",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487001608942,
+			"created": 1487001102336,
+			"url": "localhost:8080/employee-processing/employees/1",
+			"name": "get employee",
+			"method": "GET",
+			"body": {},
+			"parameters": [
+				{
+					"name": "",
+					"value": "",
+					"disabled": false
+				}
+			],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -1477067669472.1875,
+			"_type": "request"
+		},
+		{
+			"_id": "req_a8f1e35735fe42c1b5da7f491d5fe8a5",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487001596745,
+			"created": 1486921478331,
+			"url": "localhost:8080/employee-processing/companies/1",
+			"name": "update company 400",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"title\": \"TopMonks111, s.r.o\",\n\t\"ico\": \"ddd\",\n\t\"address\": \"update test\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1477067669473.5938,
+			"_type": "request"
+		},
+		{
+			"_id": "req_b6d45662061449639057f24b85900a15",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487001592059,
+			"created": 1486921095115,
+			"url": "localhost:8080/employee-processing/companies/1",
+			"name": "update company",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"title\": \"TopMonks111, s.r.o\",\n\t\"ico\": 24800000,\n\t\"address\": \"update test\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1477067669474,
+			"_type": "request"
+		},
+		{
+			"_id": "req_c9b79a2946014f13a110ca9f0fb0020f",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487002684692,
+			"created": 1487001129654,
+			"url": "localhost:8080/employee-processing/employees",
+			"name": "get all employees",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -1477067669472.164,
+			"_type": "request"
+		},
+		{
+			"_id": "req_iujzybxgbN8eS4wc2jp8sQBc",
+			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
+			"modified": 1487001606293,
+			"created": 1477067669476,
+			"url": "localhost:8080/employee-processing/companies",
+			"name": "get all companies",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -1477067669473.164,
+			"_type": "request"
+		}
+	]
+}
