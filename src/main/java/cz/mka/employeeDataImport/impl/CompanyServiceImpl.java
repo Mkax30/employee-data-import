@@ -23,7 +23,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     public Company saveCompany(Company company) {
-        if (dao.companyExistsByICO(company.getIco())) {
+        if (dao.getCompanyByIco(company.getIco()) != null) {
             return null;
         }
         return dao.saveCompany(company);

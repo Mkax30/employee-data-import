@@ -21,7 +21,7 @@ public class EmployeeDao {
     private EntityManager em;
 
     public List<OutputEmployee> getAllEmployees() {
-        Query query = em.createQuery("select new OutputEmployee(c.title, c.ico) from Employee c");
+        Query query = em.createQuery("select new OutputEmployee(e.id, concat(e.firstName, ' ', e.lastName) as name, e.email) from Employee e");
         return (List<OutputEmployee>) query.getResultList();
     }
 

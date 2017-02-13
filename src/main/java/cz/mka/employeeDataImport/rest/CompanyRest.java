@@ -3,10 +3,12 @@ package cz.mka.employeeDataImport.rest;
 import cz.mka.employeeDataImport.api.CompanyService;
 import cz.mka.employeeDataImport.api.CsvProcessingService;
 import cz.mka.employeeDataImport.api.model.Company;
+import cz.mka.employeeDataImport.api.model.Statistics;
 import cz.mka.employeeDataImport.impl.model.Input;
 import cz.mka.employeeDataImport.impl.model.OutputCompany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping(path = "/")
+@RequestMapping(path = "/employee-processing")
 public class CompanyRest {
 
     @Autowired
@@ -30,12 +32,12 @@ public class CompanyRest {
     @Autowired
     private CsvProcessingService csvProcessingService;
 
-    @RequestMapping(path = "companies", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "/companies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<OutputCompany>> getAllCompanies() {
         return new ResponseEntity<>(service.getAllCompanies(), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "companies", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(path = "/companies", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Company> saveCompany(@RequestBody Company company) {
 
         Company result = service.saveCompany(company);
@@ -46,7 +48,7 @@ public class CompanyRest {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "companies/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(path = "/companies/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Company> updateCompany(@PathVariable Integer id,
                                                  @RequestBody Company company) {
         company.setId(id);
@@ -58,7 +60,7 @@ public class CompanyRest {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "companies/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "/companies/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Company> getCompany(@PathVariable Integer id) {
 
         Company result = service.getCompany(id);
@@ -70,14 +72,14 @@ public class CompanyRest {
     }
 
     // test method for process import csv file
-    @RequestMapping(path = "importCsv", method = RequestMethod.GET)
-    public ResponseEntity testProcessCsv() {
+    @RequestMapping(path = "/importCsv", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Statistics> testProcessCsv() {
 
         List<Input> inputList = csvProcessingService.importData();
 
-        csvProcessingService.saveData(inputList);
+        Statistics result = csvProcessingService.saveData(inputList);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

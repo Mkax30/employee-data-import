@@ -1,5 +1,6 @@
 package cz.mka.employeeDataImport.api;
 
+import cz.mka.employeeDataImport.api.model.Statistics;
 import cz.mka.employeeDataImport.impl.model.Input;
 import org.springframework.stereotype.Component;
 
@@ -13,5 +14,5 @@ public interface CsvProcessingService {
 
     List<Input> importData();
 
-    void saveData(List<Input> inputList);
+    Statistics saveData(List<Input> inputList);
 }

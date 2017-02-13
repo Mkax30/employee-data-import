@@ -9,17 +9,26 @@ import javax.persistence.Id;
 @Entity
 public class OutputCompany {
 
-    private String title;
-
     @Id
+    private Integer id;
+    private String title;
     private Integer ico;
 
     public OutputCompany() {
     }
 
-    public OutputCompany(String title, Integer ico) {
+    public OutputCompany(Integer id, String title, Integer ico) {
+        this.id = id;
         this.title = title;
         this.ico = ico;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {

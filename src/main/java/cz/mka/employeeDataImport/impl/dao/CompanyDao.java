@@ -21,7 +21,7 @@ public class CompanyDao {
     private EntityManager em;
 
     public List<OutputCompany> getAllCompanies() {
-        Query query = em.createQuery("select new OutputCompany(c.title, c.ico) from Company c");
+        Query query = em.createQuery("select new OutputCompany(c.id, c.title, c.ico) from Company c");
         return (List<OutputCompany>) query.getResultList();
     }
 
@@ -43,11 +43,6 @@ public class CompanyDao {
 
     public void deleteCompany(Integer id) {
         // TODO
-    }
-
-    public Boolean companyExistsByICO(Integer ico) {
-        Query query = em.createQuery("from Company where ico = :ico").setParameter("ico", ico);
-        return !query.getResultList().isEmpty();
     }
 
     public Company getCompanyByIco(Integer ico) {

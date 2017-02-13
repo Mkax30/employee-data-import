@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -56,7 +57,15 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         mappingStrategy.setColumnMapping(columnMapping);
 
         CsvToBean ctb = new CsvToBean();
-        List list = ctb.parse(mappingStrategy, new InputStreamReader(is));
+        List list = null;
+        try {
+            list = ctb.parse(mappingStrategy, new InputStreamReader(is, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (list == null) {
+            return null;
+        }
 
         List<Input> inputList = new ArrayList<>();
         for (Object o : list) {
@@ -66,7 +75,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         return inputList;
     }
 
-    public void saveData(List<Input> inputList) {
+    public Statistics saveData(List<Input> inputList) {
 
         // validate data in list e.g. email, ico number if needed
         // TODO expecting good data :-)
@@ -130,7 +139,8 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         // todo remove csv file and put it to processed folder
 
 
-        showStatistics();
+        return new Statistics(employeesInserted, employeesUpdated, companiesInserted,
+                companiesUpdated, duplicitiesFound, notProcessed);
     }
 
 
