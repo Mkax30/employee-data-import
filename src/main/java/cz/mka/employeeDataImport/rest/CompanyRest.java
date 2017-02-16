@@ -4,6 +4,7 @@ import cz.mka.employeeDataImport.api.CompanyService;
 import cz.mka.employeeDataImport.api.CsvProcessingService;
 import cz.mka.employeeDataImport.api.model.Company;
 import cz.mka.employeeDataImport.api.model.Statistics;
+import cz.mka.employeeDataImport.impl.Utils.InputDataValidator;
 import cz.mka.employeeDataImport.impl.model.Input;
 import cz.mka.employeeDataImport.impl.model.OutputCompany;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,10 @@ public class CompanyRest {
     public ResponseEntity<Statistics> testProcessCsv() {
 
         List<Input> inputList = csvProcessingService.importData();
+
+        if (!InputDataValidator.validateDataBeforeInsert(inputList)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         Statistics result = csvProcessingService.saveData(inputList);
 

@@ -1,5 +1,7 @@
 package cz.mka.employeeDataImport.impl.model;
 
+import com.google.common.base.Objects;
+
 import java.time.LocalDateTime;
 
 /**
@@ -81,5 +83,24 @@ public class Input {
 
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Input input = (Input) o;
+        return Objects.equal(companyIco, input.companyIco) &&
+                Objects.equal(companyTitle, input.companyTitle) &&
+                Objects.equal(companyAddress, input.companyAddress) &&
+                Objects.equal(employeeEmail, input.employeeEmail) &&
+                Objects.equal(employeeFirstName, input.employeeFirstName) &&
+                Objects.equal(employeeLastName, input.employeeLastName) &&
+                Objects.equal(lastUpdate, input.lastUpdate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(companyIco, companyTitle, companyAddress, employeeEmail, employeeFirstName, employeeLastName, lastUpdate);
     }
 }

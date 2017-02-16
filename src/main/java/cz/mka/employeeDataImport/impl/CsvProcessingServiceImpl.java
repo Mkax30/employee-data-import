@@ -15,7 +15,11 @@ import org.springframework.stereotype.Component;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Martin Kaspar on 11/02/2017.
@@ -28,13 +32,6 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     @Autowired
     private EmployeeDao employeeDao;
-
-    private Integer companiesInserted;
-    private Integer companiesUpdated;
-    private Integer employeesInserted;
-    private Integer employeesUpdated;
-    private Integer duplicitiesFound;
-    private Integer notProcessed;
 
     public List<Input> importData() {
         String dataFile = "data/test_data.csv";
@@ -77,16 +74,13 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     public Statistics saveData(List<Input> inputList) {
 
-        // validate data in list e.g. email, ico number if needed
-        // TODO expecting good data :-)
+        // removing duplicates from input file
+        inputList = inputList.stream().distinct().collect(Collectors.toList());
 
-        // remove duplicities based on unique employee email
-        inputList = removeDuplicities(inputList);
-
-        // process employees first
-        employeesInserted = 0;
-        employeesUpdated = 0;
-        notProcessed = 0;
+        Integer employeesInserted = 0;
+        Integer employeesUpdated = 0;
+        Integer duplicitiesFound = 0;
+        Integer notProcessed = 0;
 
         // for remove duplicities of companies
         Map<Integer, Company> companyMap = new HashMap<>();
@@ -110,15 +104,19 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
                 employeeDao.updateEmployee(processedEmployee);
                 employeesUpdated++;
 
+            } else if (currentEmployee.getDateLastUpdate().isEqual(in.getDateLastUpdate())) {
+                // duplicity
+                duplicitiesFound++;
+
             } else {
-                // employee exists but last update is newer than inserted
+                // old record
                 notProcessed++;
             }
         }
 
         // process companies
-        companiesInserted = 0;
-        companiesUpdated = 0;
+        Integer companiesInserted = 0;
+        Integer companiesUpdated = 0;
 
         for (Company company : companyMap.values()) {
 
@@ -128,7 +126,8 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
                 companyDao.saveCompany(company);
                 companiesInserted++;
 
-            } else {
+            } else if (!currentCompany.getTitle().equals(company.getTitle()) ||
+                    !currentCompany.getAddress().equals(company.getAddress())) {
                 company.setId(currentCompany.getId());
                 companyDao.updateCompany(company);
                 companiesUpdated++;
@@ -143,33 +142,6 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
                 companiesUpdated, duplicitiesFound, notProcessed);
     }
 
-
-    private List<Input> removeDuplicities(List<Input> inputList) {
-        duplicitiesFound = 0;
-
-        // sort ascending through dateLastUpdate to determine last update if duplicity exists.
-        inputList.sort(Comparator.comparing(Input::getDateLastUpdate));
-
-        Map<String, Input> map = new HashMap<>();
-        for (Input in : inputList) {
-            if (map.containsKey(in.getEmployeeEmail()) && in.getDateLastUpdate().isEqual(map.get(in.getEmployeeEmail()).getDateLastUpdate())) {
-                duplicitiesFound++;
-            }
-            map.put(in.getEmployeeEmail(), in);
-        }
-        return new ArrayList<>(map.values());
-    }
-
-    private void showStatistics() {
-        System.out.println(
-                new Statistics(
-                        employeesInserted,
-                        employeesUpdated,
-                        companiesInserted,
-                        companiesUpdated,
-                        duplicitiesFound,
-                        notProcessed).toString());
-    }
 }
 
 

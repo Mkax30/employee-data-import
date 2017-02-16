@@ -12,14 +12,37 @@ import java.util.List;
 @Component
 public interface EmployeeService {
 
+    /**
+     * Retrieves all employees.
+     * @return
+     */
     List<OutputEmployee> getAllEmployees();
 
+    /**
+     * Inserts new employee.
+     * @param employee
+     * @return
+     */
     Employee saveEmployee(Employee employee);
 
+    /**
+     * Updates employee by id.
+     * @param employee
+     * @return
+     */
     Employee updateEmployee(Employee employee);
 
+    /**
+     * Retrieve employee by id.
+     * @param id
+     * @return
+     */
     Employee getEmployee(Integer id);
 
+    /**
+     * Deletes employee by id.
+     * @param id
+     */
     void deleteEmployee(Integer id);
 
 }

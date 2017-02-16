@@ -12,7 +12,16 @@ import java.util.List;
 @Component
 public interface CsvProcessingService {
 
+    /**
+     * Imports data from csv file.
+     * @return
+     */
     List<Input> importData();
 
+    /**
+     * Inserts new data from csv file.
+     * @param inputList
+     * @return
+     */
     Statistics saveData(List<Input> inputList);
 }
