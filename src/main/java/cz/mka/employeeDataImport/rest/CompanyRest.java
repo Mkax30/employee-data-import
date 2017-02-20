@@ -71,11 +71,15 @@ public class CompanyRest {
     }
 
     @RequestMapping(path = "/importCsv", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Statistics> testProcessCsv() {
+    public ResponseEntity<List<Statistics>> testProcessCsv() {
 
-        csvProcessingService.processDataFolder();
+        List<Statistics> result = csvProcessingService.processDataFolder();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

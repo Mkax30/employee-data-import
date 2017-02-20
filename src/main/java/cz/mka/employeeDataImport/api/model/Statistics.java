@@ -5,6 +5,8 @@ package cz.mka.employeeDataImport.api.model;
  */
 public class Statistics {
 
+    private String fileName;
+    private String message;
     private Integer employeesInserted;
     private Integer employeesUpdated;
     private Integer companiesInserted;
@@ -15,13 +17,39 @@ public class Statistics {
     public Statistics() {
     }
 
-    public Statistics(Integer employeesInserted, Integer employeesUpdated, Integer companiesInserted, Integer companiesUpdated, Integer duplicitiesFound, Integer notProcessed) {
+    public Statistics(String fileName, String message) {
+        this.fileName = fileName;
+        this.message = message;
+    }
+
+    public Statistics(String fileName, String message, Integer employeesInserted, Integer employeesUpdated,
+                      Integer companiesInserted, Integer companiesUpdated, Integer duplicitiesFound,
+                      Integer notProcessed) {
+
+        this.fileName = fileName;
+        this.message = message;
         this.employeesInserted = employeesInserted;
         this.employeesUpdated = employeesUpdated;
         this.companiesInserted = companiesInserted;
         this.companiesUpdated = companiesUpdated;
         this.duplicitiesFound = duplicitiesFound;
         this.notProcessed = notProcessed;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Integer getEmployeesInserted() {
@@ -75,7 +103,9 @@ public class Statistics {
     @Override
     public String toString() {
         return "Statistics{" +
-                "employeesInserted=" + employeesInserted +
+                "fileName=" + fileName +
+                ", message=" + message +
+                ", employeesInserted=" + employeesInserted +
                 ", employeesUpdated=" + employeesUpdated +
                 ", companiesInserted=" + companiesInserted +
                 ", companiesUpdated=" + companiesUpdated +

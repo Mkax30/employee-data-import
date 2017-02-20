@@ -40,20 +40,32 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
     @Autowired
     private EmployeeDao employeeDao;
 
-    public void processDataFolder() {
+    public List<Statistics> processDataFolder() {
         String[] files = new File(SOURCE_PATH).list();
 
         if (files == null || files.length == 0) {
-            System.out.println("No files for processing!");
-            return;
+            System.out.println("\nNo files for processing!");
+            return new ArrayList<>();
         }
+
+        List<Statistics> statisticsList = new ArrayList<>();
 
         for (String csvFile : files) {
             if (!csvFile.toLowerCase().endsWith(".csv")) {
                 continue;
             }
             List<Input> inputList = importData(csvFile);
+
+            if (inputList == null) {
+                statisticsList.add(new Statistics(csvFile, "Corrupted file!"));
+                continue;
+            }
             Statistics statistics = saveData(inputList);
+
+            statistics.setFileName(csvFile);
+            statistics.setMessage("Import successful.");
+            statisticsList.add(statistics);
+
             System.out.println("\nFile: " + csvFile + " processed successfully.");
             System.out.println(statistics);
 
@@ -70,10 +82,12 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
                 e.printStackTrace();
             }
         }
+        return statisticsList;
     }
 
     public List<Input> importData(String dataFile) {
         if (StringUtils.isEmpty(dataFile)) {
+            System.out.println("\nNo data file specified.");
             return null;
         }
 
@@ -130,7 +144,10 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
     }
 
     public Statistics saveData(List<Input> inputList) {
-
+        if (inputList == null || inputList.isEmpty()) {
+            System.out.println("\nFile is empty.");
+            return null;
+        }
         // removing duplicates from input list
         inputList = inputList.stream().distinct().collect(Collectors.toList());
 
@@ -191,7 +208,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
             }
         }
 
-        return new Statistics(employeesInserted, employeesUpdated, companiesInserted,
+        return new Statistics(null, null, employeesInserted, employeesUpdated, companiesInserted,
                 companiesUpdated, duplicitiesFound, notProcessed);
     }
 

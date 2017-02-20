@@ -14,8 +14,9 @@ public interface CsvProcessingService {
 
     /**
      * Processes all data files in specified folder.
+     * @return
      */
-    void processDataFolder();
+    List<Statistics> processDataFolder();
 
     /**
      * Imports data from csv file.
