@@ -18,7 +18,7 @@ public class Company implements Serializable {
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "ICO", nullable = false, unique = true)
+    @Column(name = "ICO", nullable = false)
     private Integer ico;
 
     @Column(name = "ADDRESS", nullable = false)

@@ -13,10 +13,16 @@ import java.util.List;
 public interface CsvProcessingService {
 
     /**
+     * Processes all data files in specified folder.
+     */
+    void processDataFolder();
+
+    /**
      * Imports data from csv file.
+     * @param dataFile
      * @return
      */
-    List<Input> importData();
+    List<Input> importData(String dataFile);
 
     /**
      * Inserts new data from csv file.

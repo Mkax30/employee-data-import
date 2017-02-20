@@ -6,15 +6,18 @@ import cz.mka.employeeDataImport.api.CsvProcessingService;
 import cz.mka.employeeDataImport.api.model.Company;
 import cz.mka.employeeDataImport.api.model.Employee;
 import cz.mka.employeeDataImport.api.model.Statistics;
+import cz.mka.employeeDataImport.impl.Utils.InputDataValidator;
 import cz.mka.employeeDataImport.impl.dao.CompanyDao;
 import cz.mka.employeeDataImport.impl.dao.EmployeeDao;
 import cz.mka.employeeDataImport.impl.model.Input;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,18 +30,62 @@ import java.util.stream.Collectors;
 @Component
 public class CsvProcessingServiceImpl implements CsvProcessingService {
 
+    private static final String BASE_PATH = "c:/test_repo/employee/";
+    private static final String SOURCE_PATH = BASE_PATH + "data/";
+    private static final String TARGET_PATH = BASE_PATH + "processed/";
+
     @Autowired
     private CompanyDao companyDao;
 
     @Autowired
     private EmployeeDao employeeDao;
 
-    public List<Input> importData() {
-        String dataFile = "data/test_data.csv";
+    public void processDataFolder() {
+        String[] files = new File(SOURCE_PATH).list();
 
-        // load data file from resources
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream(dataFile);
+        if (files == null || files.length == 0) {
+            System.out.println("No files for processing!");
+            return;
+        }
+
+        for (String csvFile : files) {
+            if (!csvFile.toLowerCase().endsWith(".csv")) {
+                continue;
+            }
+            List<Input> inputList = importData(csvFile);
+            Statistics statistics = saveData(inputList);
+            System.out.println("\nFile: " + csvFile + " processed successfully.");
+            System.out.println(statistics);
+
+            try {
+                Path source = new File(SOURCE_PATH + csvFile).toPath();
+                Path target = new File(TARGET_PATH + csvFile).toPath();
+
+                Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+
+                System.out.println("\nMoving " + csvFile + " \nfrom " + SOURCE_PATH);
+                System.out.println("to " + TARGET_PATH);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Input> importData(String dataFile) {
+        if (StringUtils.isEmpty(dataFile)) {
+            return null;
+        }
+
+        File sourceFile = new File(SOURCE_PATH + dataFile);
+        InputStream is;
+        try {
+            is = new FileInputStream(sourceFile);
+        } catch (FileNotFoundException e) {
+            System.out.println("Cannot find the file specified: " + sourceFile.getPath());
+            //e.printStackTrace();
+            return null;
+        }
 
         HeaderColumnNameTranslateMappingStrategy<Input> mappingStrategy = new HeaderColumnNameTranslateMappingStrategy<>();
         mappingStrategy.setType(Input.class);
@@ -59,6 +106,12 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
             list = ctb.parse(mappingStrategy, new InputStreamReader(is, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (list == null) {
             return null;
@@ -69,12 +122,16 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
             inputList.add((Input) o);
         }
 
+        if (!InputDataValidator.validateDataBeforeInsert(inputList)) {
+            return null;
+        }
+
         return inputList;
     }
 
     public Statistics saveData(List<Input> inputList) {
 
-        // removing duplicates from input file
+        // removing duplicates from input list
         inputList = inputList.stream().distinct().collect(Collectors.toList());
 
         Integer employeesInserted = 0;
@@ -133,10 +190,6 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
                 companiesUpdated++;
             }
         }
-
-
-        // todo remove csv file and put it to processed folder
-
 
         return new Statistics(employeesInserted, employeesUpdated, companiesInserted,
                 companiesUpdated, duplicitiesFound, notProcessed);

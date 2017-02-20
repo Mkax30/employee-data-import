@@ -5,39 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * Hello world!
- *
+ * Created by Martin Kaspar on 11/02/2017.
  */
+
 @SpringBootApplication
 @EnableScheduling
-public class App 
-{
+public class App {
 
-
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
         SpringApplication.run(App.class, args);
-        /*System.out.println( "Hello World!" );
-
-
-        CompanyDao dao = new CompanyDao();
-        System.out.println( "Hello World!" );
-
-        Company c = new Company();
-        c.setTitle("t");
-        System.out.println( "Hello World!" );
-        c.setCompanyIco(12547896);
-        System.out.println( "Hello World!" );
-
-        dao.saveCompany(c);
-
-
-        System.out.println( "Hello World!" );
-
-
-
-
-
-*/
     }
 }

@@ -4,8 +4,6 @@ import cz.mka.employeeDataImport.api.CompanyService;
 import cz.mka.employeeDataImport.api.CsvProcessingService;
 import cz.mka.employeeDataImport.api.model.Company;
 import cz.mka.employeeDataImport.api.model.Statistics;
-import cz.mka.employeeDataImport.impl.Utils.InputDataValidator;
-import cz.mka.employeeDataImport.impl.model.Input;
 import cz.mka.employeeDataImport.impl.model.OutputCompany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,19 +70,12 @@ public class CompanyRest {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // test method for process import csv file
     @RequestMapping(path = "/importCsv", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Statistics> testProcessCsv() {
 
-        List<Input> inputList = csvProcessingService.importData();
+        csvProcessingService.processDataFolder();
 
-        if (!InputDataValidator.validateDataBeforeInsert(inputList)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Statistics result = csvProcessingService.saveData(inputList);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
