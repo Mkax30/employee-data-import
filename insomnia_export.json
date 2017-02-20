@@ -1,7 +1,7 @@
 {
 	"_type": "export",
 	"__export_format": 3,
-	"__export_date": "2017-02-13T17:19:48.036Z",
+	"__export_date": "2017-02-20T12:47:53.204Z",
 	"__export_source": "insomnia.desktop.app:v4.2.11",
 	"resources": [
 		{
@@ -50,14 +50,14 @@
 		{
 			"_id": "req_2c36a1eb705e473db710005ae335e294",
 			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
-			"modified": 1487004998961,
+			"modified": 1487433384705,
 			"created": 1486911985445,
 			"url": "localhost:8080/employee-processing/companies",
 			"name": "save company",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"title\": \"TopMonks s.r.o\",\n\t\"ico\": 24877437,\n\t\"address\": \"Struhařovská 2931/9 140 00 Praha 4\"\n}"
+				"text": "{\n\t\"title\": \"TopMonks s.r.o\",\n\t\"ico\": 24847439,\n\t\"address\": \"Struhařovská 2931/9 140 00 Praha 4\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -73,7 +73,7 @@
 		{
 			"_id": "req_4d6583093240476c80e588d5b10a5a1e",
 			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
-			"modified": 1487001599540,
+			"modified": 1487265205943,
 			"created": 1486915809773,
 			"url": "localhost:8080/employee-processing/companies/1",
 			"name": "get company",
@@ -138,14 +138,14 @@
 		{
 			"_id": "req_b6d45662061449639057f24b85900a15",
 			"parentId": "wrk_iujsh7o28HkeRybkSCkkrJX6",
-			"modified": 1487001592059,
+			"modified": 1487266106269,
 			"created": 1486921095115,
 			"url": "localhost:8080/employee-processing/companies/1",
 			"name": "update company",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"title\": \"TopMonks111, s.r.o\",\n\t\"ico\": 24800000,\n\t\"address\": \"update test\"\n}"
+				"text": "{\n\t\"title\": \"TopMonks, s.r.o, updated\",\n\t\"ico\": 24847437,\n\t\"address\": \"update test\"\n}"
 			},
 			"parameters": [],
 			"headers": [
