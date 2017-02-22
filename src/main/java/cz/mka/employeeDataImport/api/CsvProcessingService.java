@@ -1,6 +1,6 @@
 package cz.mka.employeeDataImport.api;
 
-import cz.mka.employeeDataImport.impl.utilss.CsvImportRow;
+import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
 import cz.mka.employeeDataImport.rest.model.Statistics;
 import org.springframework.stereotype.Component;
 

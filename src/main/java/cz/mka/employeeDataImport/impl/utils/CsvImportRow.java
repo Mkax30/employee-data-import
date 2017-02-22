@@ -1,4 +1,4 @@
-package cz.mka.employeeDataImport.impl.utilss;
+package cz.mka.employeeDataImport.impl.utils;
 
 import com.google.common.base.Objects;
 
