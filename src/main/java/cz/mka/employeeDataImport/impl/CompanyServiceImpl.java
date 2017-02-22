@@ -1,7 +1,7 @@
 package cz.mka.employeeDataImport.impl;
 
 import cz.mka.employeeDataImport.api.CompanyService;
-import cz.mka.employeeDataImport.api.dao.CompanyDao;
+import cz.mka.employeeDataImport.impl.dao.CompanyDao;
 import cz.mka.employeeDataImport.impl.jpa.Company;
 import cz.mka.employeeDataImport.impl.utils.DataConverter;
 import cz.mka.employeeDataImport.rest.model.OutputCompany;

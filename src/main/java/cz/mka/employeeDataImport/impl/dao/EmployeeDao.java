@@ -1,4 +1,4 @@
-package cz.mka.employeeDataImport.api.dao;
+package cz.mka.employeeDataImport.impl.dao;
 
 import cz.mka.employeeDataImport.impl.jpa.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;

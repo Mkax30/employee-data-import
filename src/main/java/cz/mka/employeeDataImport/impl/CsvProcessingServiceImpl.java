@@ -3,8 +3,8 @@ package cz.mka.employeeDataImport.impl;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import cz.mka.employeeDataImport.api.CsvProcessingService;
-import cz.mka.employeeDataImport.api.dao.CompanyDao;
-import cz.mka.employeeDataImport.api.dao.EmployeeDao;
+import cz.mka.employeeDataImport.impl.dao.CompanyDao;
+import cz.mka.employeeDataImport.impl.dao.EmployeeDao;
 import cz.mka.employeeDataImport.impl.jpa.Company;
 import cz.mka.employeeDataImport.impl.jpa.Employee;
 import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
@@ -19,10 +19,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,9 +30,10 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     final static Logger logger = Logger.getLogger(CsvProcessingServiceImpl.class);
 
-    private static final String BASE_PATH = "c:/test_repo/employee/";
-    private static final String SOURCE_PATH = BASE_PATH + "data/";
-    private static final String TARGET_PATH = BASE_PATH + "processed/";
+    private String sourcePath;
+    private String targetPath;
+
+    private HashMap<String, String> props;
 
     @Autowired
     private CompanyDao companyDao;
@@ -43,8 +41,14 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
     @Autowired
     private EmployeeDao employeeDao;
 
+    public CsvProcessingServiceImpl() {
+        loadProperties();
+        this.sourcePath = props.get("data.path.source");
+        this.targetPath = props.get("data.path.target");
+    }
+
     public List<Statistics> processDataFolder() {
-        String[] files = new File(SOURCE_PATH).list();
+        String[] files = new File(sourcePath).list();
 
         if (files == null || files.length == 0) {
             logger.info("No files for processing!");
@@ -81,11 +85,11 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
             logger.info(statistics);
 
             try {
-                Path source = new File(SOURCE_PATH + csvFile).toPath();
-                Path target = new File(TARGET_PATH + csvFile).toPath();
+                Path source = new File(sourcePath + csvFile).toPath();
+                Path target = new File(targetPath + csvFile).toPath();
 
                 Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-                logger.info("Moving " + csvFile + " from " + SOURCE_PATH + " to " + TARGET_PATH);
+                logger.info("Moving " + csvFile + " from " + sourcePath + " to " + targetPath);
 
             } catch (IOException e) {
                 logger.error("Cannot move processed file " + csvFile, e);
@@ -95,7 +99,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
     }
 
     public List<CsvImportRow> importData(String dataFile) throws IOException {
-        File sourceFile = new File(SOURCE_PATH + dataFile);
+        File sourceFile = new File(sourcePath + dataFile);
 
         if (!sourceFile.exists()) {
             logger.error("No data file specified.");
@@ -219,6 +223,30 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
         return new Statistics(null, null, employeesInserted, employeesUpdated, companiesInserted,
                 companiesUpdated, duplicitiesFound, notProcessed);
+    }
+
+    private void loadProperties() {
+        if (props != null) {
+            return;
+        } else {
+            props = new HashMap<>();
+        }
+
+        Properties prop = new Properties();
+        String filename = "config.properties";
+        try {
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(filename)) {
+                prop.load(is);
+                Enumeration<?> e = prop.propertyNames();
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    String value = prop.getProperty(key);
+                    props.put(key, value);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Cannot load property file.", e);
+        }
     }
 
 }
