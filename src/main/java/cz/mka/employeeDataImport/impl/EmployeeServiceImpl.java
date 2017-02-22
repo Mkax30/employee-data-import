@@ -3,7 +3,7 @@ package cz.mka.employeeDataImport.impl;
 import cz.mka.employeeDataImport.api.EmployeeService;
 import cz.mka.employeeDataImport.api.dao.EmployeeDao;
 import cz.mka.employeeDataImport.impl.jpa.Employee;
-import cz.mka.employeeDataImport.impl.utils.DataConverter;
+import cz.mka.employeeDataImport.impl.utilss.DataConverter;
 import cz.mka.employeeDataImport.rest.model.OutputEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

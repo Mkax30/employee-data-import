@@ -1,7 +1,7 @@
 package cz.mka.employeeDataImport.impl;
 
 import cz.mka.employeeDataImport.api.CsvProcessingService;
-import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
+import cz.mka.employeeDataImport.impl.utilss.CsvImportRow;
 import cz.mka.employeeDataImport.rest.model.Statistics;
 import junit.framework.TestCase;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package cz.mka.employeeDataImport.impl.utils;
+package cz.mka.employeeDataImport.impl.utilss;
 
 import cz.mka.employeeDataImport.impl.jpa.Company;
 import cz.mka.employeeDataImport.impl.jpa.Employee;
