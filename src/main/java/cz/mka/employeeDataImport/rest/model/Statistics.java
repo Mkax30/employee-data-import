@@ -1,4 +1,4 @@
-package cz.mka.employeeDataImport.api.model;
+package cz.mka.employeeDataImport.rest.model;
 
 /**
  * Created by Martin Kaspar on 12/02/2017.

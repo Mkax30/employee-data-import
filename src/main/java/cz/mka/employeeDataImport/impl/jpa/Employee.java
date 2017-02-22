@@ -1,4 +1,4 @@
-package cz.mka.employeeDataImport.api.model;
+package cz.mka.employeeDataImport.impl.jpa;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,8 +16,8 @@ public class Employee implements Serializable{
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "COMPANY_ICO", nullable = false)
-    private Integer companyIco;
+    @Column(name = "COMPANY_ID")
+    private Integer companyId;
 
     @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
@@ -31,12 +31,16 @@ public class Employee implements Serializable{
     @Column(name = "LAST_UPDATE", nullable = false)
     private LocalDateTime dateLastUpdate;
 
+/*    @ManyToOne
+    @JoinColumn(name = "COMPANY_ID", referencedColumnName="ID")
+    private Company company;*/
+
     public Employee() {
     }
 
-    public Employee(Integer id, Integer companyIco, String firstName, String lastName, String email, LocalDateTime dateLastUpdate) {
+    public Employee(Integer id, Integer companyId, String firstName, String lastName, String email, LocalDateTime dateLastUpdate) {
         this.id = id;
-        this.companyIco = companyIco;
+        this.companyId = companyId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -51,12 +55,12 @@ public class Employee implements Serializable{
         this.id = id;
     }
 
-    public Integer getCompanyIco() {
-        return companyIco;
+    public Integer getCompanyId() {
+        return companyId;
     }
 
-    public void setCompanyIco(Integer companyIco) {
-        this.companyIco = companyIco;
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 
     public String getFirstName() {
@@ -90,4 +94,12 @@ public class Employee implements Serializable{
     public void setDateLastUpdate(LocalDateTime dateLastUpdate) {
         this.dateLastUpdate = dateLastUpdate;
     }
+
+/*    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }*/
 }

@@ -1,7 +1,7 @@
 package cz.mka.employeeDataImport.api;
 
-import cz.mka.employeeDataImport.api.model.Company;
-import cz.mka.employeeDataImport.impl.model.OutputCompany;
+import cz.mka.employeeDataImport.impl.jpa.Company;
+import cz.mka.employeeDataImport.rest.model.OutputCompany;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,18 +19,11 @@ public interface CompanyService {
     List<OutputCompany> getAllCompanies();
 
     /**
-     * Inserts new company.
+     * Inserts new company or updates current.
      * @param company
      * @return
      */
     Company saveCompany(Company company);
-
-    /**
-     * Updates company by id.
-     * @param company
-     * @return
-     */
-    Company updateCompany(Company company);
 
     /**
      * Retrieves company by id.

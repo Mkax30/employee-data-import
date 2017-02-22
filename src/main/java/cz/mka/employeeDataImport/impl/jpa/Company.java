@@ -1,7 +1,8 @@
-package cz.mka.employeeDataImport.api.model;
+package cz.mka.employeeDataImport.impl.jpa;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Martin Kaspar on 11/02/2017.
@@ -24,14 +25,18 @@ public class Company implements Serializable {
     @Column(name = "ADDRESS", nullable = false)
     private String address;
 
+    @OneToMany(mappedBy = "companyId", targetEntity = Employee.class)
+    private List<Employee> employees;
+
     public Company() {
     }
 
-    public Company(Integer id, String title, Integer ico, String address) {
+    public Company(Integer id, String title, Integer ico, String address, List<Employee> employees) {
         this.id = id;
         this.title = title;
         this.ico = ico;
         this.address = address;
+        this.employees = employees;
     }
 
     public Integer getId() {
@@ -64,5 +69,13 @@ public class Company implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 }

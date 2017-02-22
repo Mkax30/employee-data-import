@@ -1,8 +1,8 @@
 package cz.mka.employeeDataImport.impl;
 
 import cz.mka.employeeDataImport.api.CsvProcessingService;
-import cz.mka.employeeDataImport.api.model.Statistics;
-import cz.mka.employeeDataImport.impl.model.Input;
+import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
+import cz.mka.employeeDataImport.rest.model.Statistics;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,29 +24,29 @@ public class CsvProcessingServiceImplTest extends TestCase {
 
     @Test
     public void testImportData() throws Exception {
-        List<Input> inputList = service.importData("test_data.csv");
-        assertNotNull(inputList);
+        List<CsvImportRow> csvImportRowList = service.importData("test_data.csv");
+        assertNotNull(csvImportRowList);
     }
 
     @Test
     public void testFileDoesNotExists() throws Exception {
-        List<Input> inputList = service.importData("sdf");
-        assertNull(inputList);
+        List<CsvImportRow> csvImportRowList = service.importData("sdf");
+        assertNull(csvImportRowList);
 
-        inputList = service.importData(null);
-        assertNull(inputList);
+        csvImportRowList = service.importData(null);
+        assertNull(csvImportRowList);
     }
 
     @Test
     public void testBadCsvFile() throws Exception {
-        List<Input> inputList = service.importData("bad_test_data.csv");
-        assertNull(inputList);
+        List<CsvImportRow> csvImportRowList = service.importData("bad_test_data.csv");
+        assertNull(csvImportRowList);
     }
 
     @Test
     public void testSaveData() throws Exception {
-        List<Input> inputList = service.importData("test_data.csv");
-        Statistics statistics = service.saveData(inputList);
+        List<CsvImportRow> csvImportRowList = service.importData("test_data.csv");
+        Statistics statistics = service.saveData(csvImportRowList);
         assertNotNull(statistics);
     }
 }

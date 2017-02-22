@@ -1,13 +1,15 @@
 package cz.mka.employeeDataImport.impl;
 
 import cz.mka.employeeDataImport.api.CompanyService;
-import cz.mka.employeeDataImport.api.model.Company;
-import cz.mka.employeeDataImport.impl.dao.CompanyDao;
-import cz.mka.employeeDataImport.impl.model.OutputCompany;
+import cz.mka.employeeDataImport.api.dao.CompanyDao;
+import cz.mka.employeeDataImport.impl.jpa.Company;
+import cz.mka.employeeDataImport.impl.utils.DataConverter;
+import cz.mka.employeeDataImport.rest.model.OutputCompany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Martin Kaspar on 11/02/2017.
@@ -19,28 +21,19 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyDao dao;
 
     public List<OutputCompany> getAllCompanies() {
-        return dao.getAllCompanies();
+        List<Company> companyList = dao.findAll();
+        return companyList.stream().map(DataConverter::convertCompanyEntity).collect(Collectors.toList());
     }
 
     public Company saveCompany(Company company) {
-        if (dao.getCompanyByIco(company.getIco()) != null) {
-            return null;
-        }
-        return dao.saveCompany(company);
-    }
-
-    public Company updateCompany(Company company) {
-        if (dao.getCompany(company.getId()) == null) {
-            return null;
-        }
-        return dao.updateCompany(company);
+        return dao.save(company);
     }
 
     public Company getCompany(Integer id) {
-        return dao.getCompany(id);
+        return dao.findById(id);
     }
 
     public void deleteCompany(Integer id) {
-        dao.deleteCompany(id);
+        dao.delete(id);
     }
 }

@@ -1,7 +1,7 @@
 package cz.mka.employeeDataImport.api;
 
-import cz.mka.employeeDataImport.api.model.Employee;
-import cz.mka.employeeDataImport.impl.model.OutputEmployee;
+import cz.mka.employeeDataImport.impl.jpa.Employee;
+import cz.mka.employeeDataImport.rest.model.OutputEmployee;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,13 +24,6 @@ public interface EmployeeService {
      * @return
      */
     Employee saveEmployee(Employee employee);
-
-    /**
-     * Updates employee by id.
-     * @param employee
-     * @return
-     */
-    Employee updateEmployee(Employee employee);
 
     /**
      * Retrieve employee by id.

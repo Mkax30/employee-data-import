@@ -2,9 +2,9 @@ package cz.mka.employeeDataImport.rest;
 
 import cz.mka.employeeDataImport.api.CompanyService;
 import cz.mka.employeeDataImport.api.CsvProcessingService;
-import cz.mka.employeeDataImport.api.model.Company;
-import cz.mka.employeeDataImport.api.model.Statistics;
-import cz.mka.employeeDataImport.impl.model.OutputCompany;
+import cz.mka.employeeDataImport.impl.jpa.Company;
+import cz.mka.employeeDataImport.rest.model.OutputCompany;
+import cz.mka.employeeDataImport.rest.model.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,7 +51,7 @@ public class CompanyRest {
     public ResponseEntity<Company> updateCompany(@PathVariable Integer id,
                                                  @RequestBody Company company) {
         company.setId(id);
-        Company result = service.updateCompany(company);
+        Company result = service.saveCompany(company);
 
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,4 +1,4 @@
-package cz.mka.employeeDataImport.impl.model;
+package cz.mka.employeeDataImport.impl.utils;
 
 import com.google.common.base.Objects;
 
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 /**
  * Created by Martin Kaspar on 11/02/2017.
  */
-public class Input {
+public class CsvImportRow {
 
     private Integer companyIco;
     private String companyTitle;
@@ -89,14 +89,14 @@ public class Input {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Input input = (Input) o;
-        return Objects.equal(companyIco, input.companyIco) &&
-                Objects.equal(companyTitle, input.companyTitle) &&
-                Objects.equal(companyAddress, input.companyAddress) &&
-                Objects.equal(employeeEmail, input.employeeEmail) &&
-                Objects.equal(employeeFirstName, input.employeeFirstName) &&
-                Objects.equal(employeeLastName, input.employeeLastName) &&
-                Objects.equal(lastUpdate, input.lastUpdate);
+        CsvImportRow csvImportRow = (CsvImportRow) o;
+        return Objects.equal(companyIco, csvImportRow.companyIco) &&
+                Objects.equal(companyTitle, csvImportRow.companyTitle) &&
+                Objects.equal(companyAddress, csvImportRow.companyAddress) &&
+                Objects.equal(employeeEmail, csvImportRow.employeeEmail) &&
+                Objects.equal(employeeFirstName, csvImportRow.employeeFirstName) &&
+                Objects.equal(employeeLastName, csvImportRow.employeeLastName) &&
+                Objects.equal(lastUpdate, csvImportRow.lastUpdate);
     }
 
     @Override

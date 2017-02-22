@@ -3,16 +3,17 @@ package cz.mka.employeeDataImport.impl;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import cz.mka.employeeDataImport.api.CsvProcessingService;
-import cz.mka.employeeDataImport.api.model.Company;
-import cz.mka.employeeDataImport.api.model.Employee;
-import cz.mka.employeeDataImport.api.model.Statistics;
-import cz.mka.employeeDataImport.impl.Utils.InputDataValidator;
-import cz.mka.employeeDataImport.impl.dao.CompanyDao;
-import cz.mka.employeeDataImport.impl.dao.EmployeeDao;
-import cz.mka.employeeDataImport.impl.model.Input;
+import cz.mka.employeeDataImport.api.dao.CompanyDao;
+import cz.mka.employeeDataImport.api.dao.EmployeeDao;
+import cz.mka.employeeDataImport.impl.jpa.Company;
+import cz.mka.employeeDataImport.impl.jpa.Employee;
+import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
+import cz.mka.employeeDataImport.impl.utils.DataConverter;
+import cz.mka.employeeDataImport.impl.utils.InputDataValidator;
+import cz.mka.employeeDataImport.rest.model.Statistics;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 @Component
 public class CsvProcessingServiceImpl implements CsvProcessingService {
 
+    final static Logger logger = Logger.getLogger(CsvProcessingServiceImpl.class);
+
     private static final String BASE_PATH = "c:/test_repo/employee/";
     private static final String SOURCE_PATH = BASE_PATH + "data/";
     private static final String TARGET_PATH = BASE_PATH + "processed/";
@@ -44,7 +47,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         String[] files = new File(SOURCE_PATH).list();
 
         if (files == null || files.length == 0) {
-            System.out.println("\nNo files for processing!");
+            logger.info("No files for processing!");
             return new ArrayList<>();
         }
 
@@ -54,55 +57,53 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
             if (!csvFile.toLowerCase().endsWith(".csv")) {
                 continue;
             }
-            List<Input> inputList = importData(csvFile);
 
-            if (inputList == null) {
-                statisticsList.add(new Statistics(csvFile, "Corrupted file!"));
+            List<CsvImportRow> csvImportRowList;
+            try {
+                csvImportRowList = importData(csvFile);
+            } catch (IOException e) {
+                logger.error("Cannot find the file specified: " + csvFile, e);
                 continue;
             }
-            Statistics statistics = saveData(inputList);
+
+            if (csvImportRowList == null) {
+                statisticsList.add(new Statistics(csvFile, "Corrupted file!"));
+                logger.warn("Invalid csv file: " + csvFile);
+                continue;
+            }
+            Statistics statistics = saveData(csvImportRowList);
 
             statistics.setFileName(csvFile);
-            statistics.setMessage("Import successful.");
+            statistics.setMessage("Import successful");
             statisticsList.add(statistics);
 
-            System.out.println("\nFile: " + csvFile + " processed successfully.");
-            System.out.println(statistics);
+            logger.info("File: " + csvFile + " processed successfully.");
+            logger.info(statistics);
 
             try {
                 Path source = new File(SOURCE_PATH + csvFile).toPath();
                 Path target = new File(TARGET_PATH + csvFile).toPath();
 
                 Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-
-                System.out.println("\nMoving " + csvFile + " \nfrom " + SOURCE_PATH);
-                System.out.println("to " + TARGET_PATH);
+                logger.info("Moving " + csvFile + " from " + SOURCE_PATH + " to " + TARGET_PATH);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Cannot move processed file " + csvFile, e);
             }
         }
         return statisticsList;
     }
 
-    public List<Input> importData(String dataFile) {
-        if (StringUtils.isEmpty(dataFile)) {
-            System.out.println("\nNo data file specified.");
-            return null;
-        }
-
+    public List<CsvImportRow> importData(String dataFile) throws IOException {
         File sourceFile = new File(SOURCE_PATH + dataFile);
-        InputStream is;
-        try {
-            is = new FileInputStream(sourceFile);
-        } catch (FileNotFoundException e) {
-            System.out.println("Cannot find the file specified: " + sourceFile.getPath());
-            //e.printStackTrace();
+
+        if (!sourceFile.exists()) {
+            logger.error("No data file specified.");
             return null;
         }
 
-        HeaderColumnNameTranslateMappingStrategy<Input> mappingStrategy = new HeaderColumnNameTranslateMappingStrategy<>();
-        mappingStrategy.setType(Input.class);
+        HeaderColumnNameTranslateMappingStrategy<CsvImportRow> mappingStrategy = new HeaderColumnNameTranslateMappingStrategy<>();
+        mappingStrategy.setType(CsvImportRow.class);
 
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("ico", "companyIco");
@@ -115,96 +116,104 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         mappingStrategy.setColumnMapping(columnMapping);
 
         CsvToBean ctb = new CsvToBean();
-        List list = null;
-        try {
+        List list;
+
+
+
+        try (InputStream is = new FileInputStream(sourceFile)) {
+            /*FileChannel fileChannel = new RandomAccessFile(is., "rw").getChannel();
+            FileLock lock = fileChannel.tryLock();
+            fileChannel.*/
+
             list = ctb.parse(mappingStrategy, new InputStreamReader(is, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+//            lock.release();
         }
+
+
+
         if (list == null) {
             return null;
         }
 
-        List<Input> inputList = new ArrayList<>();
+        List<CsvImportRow> csvImportRowList = new ArrayList<>();
         for (Object o : list) {
-            inputList.add((Input) o);
+            csvImportRowList.add((CsvImportRow) o);
         }
 
-        if (!InputDataValidator.validateDataBeforeInsert(inputList)) {
+        if (!InputDataValidator.validateDataBeforeInsert(csvImportRowList)) {
             return null;
         }
 
-        return inputList;
+        return csvImportRowList;
     }
 
-    public Statistics saveData(List<Input> inputList) {
-        if (inputList == null || inputList.isEmpty()) {
-            System.out.println("\nFile is empty.");
+    public Statistics saveData(List<CsvImportRow> csvImportRowList) {
+
+        if (csvImportRowList == null || csvImportRowList.isEmpty()) {
+            logger.warn("File is empty.");
             return null;
         }
+
         // removing duplicates from input list
-        inputList = inputList.stream().distinct().collect(Collectors.toList());
+        csvImportRowList = csvImportRowList.stream().distinct().collect(Collectors.toList());
 
-        Integer employeesInserted = 0;
-        Integer employeesUpdated = 0;
-        Integer duplicitiesFound = 0;
-        Integer notProcessed = 0;
-
-        // for remove duplicities of companies
+        // map companies
         Map<Integer, Company> companyMap = new HashMap<>();
+        for (CsvImportRow row : csvImportRowList) {
+            companyMap.put(row.getCompanyIco(), DataConverter.convertInputRowToCompany(row));
+        }
 
-        // save employee data to db
-        for (Input in : inputList) {
-            // prepare company list
-            companyMap.put(in.getCompanyIco(), new Company(null, in.getCompanyTitle(), in.getCompanyIco(), in.getCompanyAddress()));
+        // map employees
+        Map<String, Employee> employeeMap = new HashMap<>();
+        for (CsvImportRow row : csvImportRowList) {
+            employeeMap.put(row.getEmployeeEmail().toLowerCase(), DataConverter.convertInpuRowToEmployee(row));
+        }
 
-            Employee currentEmployee = employeeDao.getEmployeeByEmail(in.getEmployeeEmail());
-            Employee processedEmployee = new Employee(null, in.getCompanyIco(), in.getEmployeeFirstName(), in.getEmployeeLastName(), in.getEmployeeEmail(), in.getDateLastUpdate());
+        // insert or update companies
+        int companiesInserted = 0;
+        int companiesUpdated = 0;
 
-            if (currentEmployee == null) {
-                // save new
-                employeeDao.saveEmployee(processedEmployee);
-                employeesInserted++;
+        for (Company c : companyMap.values()) {
+            Company current = companyDao.findByIco(c.getIco());
 
-            } else if (currentEmployee.getDateLastUpdate().isBefore(in.getDateLastUpdate())) {
-                // update current
-                processedEmployee.setId(currentEmployee.getId());
-                employeeDao.updateEmployee(processedEmployee);
-                employeesUpdated++;
-
-            } else if (currentEmployee.getDateLastUpdate().isEqual(in.getDateLastUpdate())) {
-                // duplicity
-                duplicitiesFound++;
+            if (current == null) {
+                companyDao.save(c);
+                companiesInserted++;
 
             } else {
-                // old record
-                notProcessed++;
+                c.setId(current.getId());
+                companyDao.save(c);
+                companiesUpdated++;
             }
         }
 
-        // process companies
-        Integer companiesInserted = 0;
-        Integer companiesUpdated = 0;
+        // insert or update employees
+        int employeesInserted = 0;
+        int employeesUpdated = 0;
+        int duplicitiesFound = 0;
+        int notProcessed = 0;
 
-        for (Company company : companyMap.values()) {
+        for (Employee e : employeeMap.values()) {
+            Employee current = employeeDao.findByEmailIgnoreCase(e.getEmail());
 
-            Company currentCompany = companyDao.getCompanyByIco(company.getIco());
+            if (current == null) {
+                e.setCompanyId(companyMap.get(e.getCompanyId()).getId());
+                employeeDao.save(e);
+                employeesInserted++;
 
-            if (currentCompany == null) {
-                companyDao.saveCompany(company);
-                companiesInserted++;
+            } else if (current.getDateLastUpdate().isBefore(e.getDateLastUpdate())) {
+                e.setId(current.getId());
+                e.setCompanyId(current.getCompanyId());
+                employeeDao.save(e);
+                employeesUpdated++;
 
-            } else if (!currentCompany.getTitle().equals(company.getTitle()) ||
-                    !currentCompany.getAddress().equals(company.getAddress())) {
-                company.setId(currentCompany.getId());
-                companyDao.updateCompany(company);
-                companiesUpdated++;
+            } else if (current.getDateLastUpdate().isEqual(e.getDateLastUpdate())) {
+                duplicitiesFound++;
+
+            } else {
+                notProcessed++;
+
             }
         }
 

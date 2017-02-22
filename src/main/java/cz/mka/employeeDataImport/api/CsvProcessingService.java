@@ -1,9 +1,10 @@
 package cz.mka.employeeDataImport.api;
 
-import cz.mka.employeeDataImport.api.model.Statistics;
-import cz.mka.employeeDataImport.impl.model.Input;
+import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
+import cz.mka.employeeDataImport.rest.model.Statistics;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,12 +24,12 @@ public interface CsvProcessingService {
      * @param dataFile
      * @return
      */
-    List<Input> importData(String dataFile);
+    List<CsvImportRow> importData(String dataFile) throws IOException;
 
     /**
      * Inserts new data from csv file.
-     * @param inputList
+     * @param csvImportRowList
      * @return
      */
-    Statistics saveData(List<Input> inputList);
+    Statistics saveData(List<CsvImportRow> csvImportRowList);
 }

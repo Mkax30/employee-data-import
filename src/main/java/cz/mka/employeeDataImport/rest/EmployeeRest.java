@@ -1,8 +1,8 @@
 package cz.mka.employeeDataImport.rest;
 
 import cz.mka.employeeDataImport.api.EmployeeService;
-import cz.mka.employeeDataImport.api.model.Employee;
-import cz.mka.employeeDataImport.impl.model.OutputEmployee;
+import cz.mka.employeeDataImport.impl.jpa.Employee;
+import cz.mka.employeeDataImport.rest.model.OutputEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,9 +44,9 @@ public class EmployeeRest {
 
     @RequestMapping(path = "/employees/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Employee> updateEmployee(@PathVariable Integer id,
-                                                 @RequestBody Employee employee) {
+                                                   @RequestBody Employee employee) {
         employee.setId(id);
-        Employee result = service.updateEmployee(employee);
+        Employee result = service.saveEmployee(employee);
 
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
