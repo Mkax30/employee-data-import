@@ -76,7 +76,7 @@ public class DataConverter {
      * @param csvImportRow data row from csv file
      * @return
      */
-    public static Employee convertInpuRowToEmployee(CsvImportRow csvImportRow) {
+    public static Employee convertInputRowToEmployee(CsvImportRow csvImportRow) {
         if (csvImportRow == null) {
             logger.error("Cannot convert empty object to Employee.");
             return null;

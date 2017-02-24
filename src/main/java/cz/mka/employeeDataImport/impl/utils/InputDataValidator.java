@@ -27,7 +27,7 @@ public class InputDataValidator {
                 row++;
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Csv file contains invalid data on row " + row, e);
+            logger.warn("Csv file contains invalid data on row " + row);
             return false;
         }
         return true;

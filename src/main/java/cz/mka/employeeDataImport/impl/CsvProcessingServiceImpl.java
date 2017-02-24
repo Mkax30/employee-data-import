@@ -13,6 +13,7 @@ import cz.mka.employeeDataImport.impl.utils.InputDataValidator;
 import cz.mka.employeeDataImport.rest.model.Statistics;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -30,10 +31,12 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     final static Logger logger = Logger.getLogger(CsvProcessingServiceImpl.class);
 
+    public static final String CONFIG_PROPERTIES = "config.properties";
+
     private String sourcePath;
     private String targetPath;
 
-    private HashMap<String, String> props;
+    private Properties props;
 
     @Autowired
     private CompanyDao companyDao;
@@ -43,10 +46,11 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     public CsvProcessingServiceImpl() {
         loadProperties();
-        this.sourcePath = props.get("data.path.source");
-        this.targetPath = props.get("data.path.target");
+        this.sourcePath = props.getProperty("data.path.source");
+        this.targetPath = props.getProperty("data.path.target");
     }
 
+    @Scheduled(cron = "0 * * * * *")
     public List<Statistics> processDataFolder() {
         String[] files = new File(sourcePath).list();
 
@@ -100,6 +104,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     public List<CsvImportRow> importData(String dataFile) throws IOException {
         File sourceFile = new File(sourcePath + dataFile);
+        logger.info("Preparing for import data from " + sourceFile.getPath());
 
         if (!sourceFile.exists()) {
             logger.error("No data file specified.");
@@ -122,19 +127,9 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         CsvToBean ctb = new CsvToBean();
         List list;
 
-
-
         try (InputStream is = new FileInputStream(sourceFile)) {
-            /*FileChannel fileChannel = new RandomAccessFile(is., "rw").getChannel();
-            FileLock lock = fileChannel.tryLock();
-            fileChannel.*/
-
             list = ctb.parse(mappingStrategy, new InputStreamReader(is, "UTF-8"));
-
-//            lock.release();
         }
-
-
 
         if (list == null) {
             return null;
@@ -171,7 +166,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         // map employees
         Map<String, Employee> employeeMap = new HashMap<>();
         for (CsvImportRow row : csvImportRowList) {
-            employeeMap.put(row.getEmployeeEmail().toLowerCase(), DataConverter.convertInpuRowToEmployee(row));
+            employeeMap.put(row.getEmployeeEmail().toLowerCase(), DataConverter.convertInputRowToEmployee(row));
         }
 
         // insert or update companies
@@ -229,20 +224,13 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         if (props != null) {
             return;
         } else {
-            props = new HashMap<>();
+            props = new Properties();
         }
 
-        Properties prop = new Properties();
-        String filename = "config.properties";
+        String filename = CONFIG_PROPERTIES;
         try {
             try (InputStream is = getClass().getClassLoader().getResourceAsStream(filename)) {
-                prop.load(is);
-                Enumeration<?> e = prop.propertyNames();
-                while (e.hasMoreElements()) {
-                    String key = (String) e.nextElement();
-                    String value = prop.getProperty(key);
-                    props.put(key, value);
-                }
+                props.load(is);
             }
         } catch (IOException e) {
             logger.error("Cannot load property file.", e);
