@@ -1,22 +1,20 @@
 package cz.mka.employeeDataImport.impl.utils;
 
+import org.apache.log4j.Logger;
+
 import cz.mka.employeeDataImport.impl.jpa.Company;
 import cz.mka.employeeDataImport.impl.jpa.Employee;
 import cz.mka.employeeDataImport.rest.model.OutputCompany;
 import cz.mka.employeeDataImport.rest.model.OutputEmployee;
-import org.apache.log4j.Logger;
 
-/**
- * Created by Martin Kaspar on 22/02/2017.
- */
 public class DataConverter {
 
     final static Logger logger = Logger.getLogger(DataConverter.class);
 
     /**
      * Converts company entity to output structure.
+     *
      * @param company company entity
-     * @return
      */
     public static OutputCompany convertCompanyEntity(Company company) {
         if (company == null) {
@@ -34,8 +32,8 @@ public class DataConverter {
 
     /**
      * Converts employee entity to output structure.
+     *
      * @param employee employee entity
-     * @return
      */
     public static OutputEmployee convertEmployeeEntity(Employee employee) {
         if (employee == null) {
@@ -53,8 +51,8 @@ public class DataConverter {
 
     /**
      * Converts row data from csv file to company object.
+     *
      * @param csvImportRow data row from csv file
-     * @return
      */
     public static Company convertInputRowToCompany(CsvImportRow csvImportRow) {
         if (csvImportRow == null) {
@@ -73,8 +71,8 @@ public class DataConverter {
 
     /**
      * Converts row data from csv file to employee object.
+     *
      * @param csvImportRow data row from csv file
-     * @return
      */
     public static Employee convertInputRowToEmployee(CsvImportRow csvImportRow) {
         if (csvImportRow == null) {

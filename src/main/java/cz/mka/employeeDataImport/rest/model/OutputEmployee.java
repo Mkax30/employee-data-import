@@ -1,8 +1,5 @@
 package cz.mka.employeeDataImport.rest.model;
 
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
 public class OutputEmployee {
 
     private String name;

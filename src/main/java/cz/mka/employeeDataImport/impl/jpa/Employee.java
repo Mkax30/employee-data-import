@@ -1,15 +1,17 @@
 package cz.mka.employeeDataImport.impl.jpa;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "EMPLOYEE")
-public class Employee implements Serializable{
+public class Employee implements Serializable {
 
     @Id
     @GeneratedValue

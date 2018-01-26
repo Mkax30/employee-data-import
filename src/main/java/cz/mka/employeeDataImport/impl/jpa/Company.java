@@ -1,12 +1,15 @@
 package cz.mka.employeeDataImport.impl.jpa;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "COMPANY")
 public class Company implements Serializable {

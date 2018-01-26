@@ -2,6 +2,27 @@ package cz.mka.employeeDataImport.impl;
 
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.stream.Collectors;
+
 import cz.mka.employeeDataImport.api.CsvProcessingService;
 import cz.mka.employeeDataImport.impl.dao.CompanyDao;
 import cz.mka.employeeDataImport.impl.dao.EmployeeDao;
@@ -11,22 +32,8 @@ import cz.mka.employeeDataImport.impl.utils.CsvImportRow;
 import cz.mka.employeeDataImport.impl.utils.DataConverter;
 import cz.mka.employeeDataImport.impl.utils.InputDataValidator;
 import cz.mka.employeeDataImport.rest.model.Statistics;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.*;
-import java.util.stream.Collectors;
-
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
-@Component
+@Service
 public class CsvProcessingServiceImpl implements CsvProcessingService {
 
     final static Logger logger = Logger.getLogger(CsvProcessingServiceImpl.class);
@@ -217,7 +224,7 @@ public class CsvProcessingServiceImpl implements CsvProcessingService {
         }
 
         return new Statistics(null, null, employeesInserted, employeesUpdated, companiesInserted,
-                companiesUpdated, duplicitiesFound, notProcessed);
+                              companiesUpdated, duplicitiesFound, notProcessed);
     }
 
     private void loadProperties() {

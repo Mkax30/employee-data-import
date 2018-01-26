@@ -1,8 +1,5 @@
 package cz.mka.employeeDataImport.rest.model;
 
-/**
- * Created by Martin Kaspar on 12/02/2017.
- */
 public class Statistics {
 
     private String fileName;
@@ -103,14 +100,14 @@ public class Statistics {
     @Override
     public String toString() {
         return "Statistics{" +
-                "fileName=" + fileName +
-                ", message=" + message +
-                ", employeesInserted=" + employeesInserted +
-                ", employeesUpdated=" + employeesUpdated +
-                ", companiesInserted=" + companiesInserted +
-                ", companiesUpdated=" + companiesUpdated +
-                ", duplicitiesFound=" + duplicitiesFound +
-                ", notProcessed=" + notProcessed +
-                '}';
+               "fileName=" + fileName +
+               ", message=" + message +
+               ", employeesInserted=" + employeesInserted +
+               ", employeesUpdated=" + employeesUpdated +
+               ", companiesInserted=" + companiesInserted +
+               ", companiesUpdated=" + companiesUpdated +
+               ", duplicitiesFound=" + duplicitiesFound +
+               ", notProcessed=" + notProcessed +
+               '}';
     }
 }

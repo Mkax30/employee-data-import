@@ -1,14 +1,12 @@
 package cz.mka.employeeDataImport.impl.utils;
 
 import com.google.common.base.Preconditions;
+
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-/**
- * Created by Martin Kaspar on 16/02/2017.
- */
 public class InputDataValidator {
 
     final static Logger logger = Logger.getLogger(InputDataValidator.class);

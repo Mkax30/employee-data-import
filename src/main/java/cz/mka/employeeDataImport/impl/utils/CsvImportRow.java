@@ -4,9 +4,6 @@ import com.google.common.base.Objects;
 
 import java.time.LocalDateTime;
 
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
 public class CsvImportRow {
 
     private Integer companyIco;
@@ -87,16 +84,20 @@ public class CsvImportRow {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         CsvImportRow csvImportRow = (CsvImportRow) o;
         return Objects.equal(companyIco, csvImportRow.companyIco) &&
-                Objects.equal(companyTitle, csvImportRow.companyTitle) &&
-                Objects.equal(companyAddress, csvImportRow.companyAddress) &&
-                Objects.equal(employeeEmail, csvImportRow.employeeEmail) &&
-                Objects.equal(employeeFirstName, csvImportRow.employeeFirstName) &&
-                Objects.equal(employeeLastName, csvImportRow.employeeLastName) &&
-                Objects.equal(lastUpdate, csvImportRow.lastUpdate);
+               Objects.equal(companyTitle, csvImportRow.companyTitle) &&
+               Objects.equal(companyAddress, csvImportRow.companyAddress) &&
+               Objects.equal(employeeEmail, csvImportRow.employeeEmail) &&
+               Objects.equal(employeeFirstName, csvImportRow.employeeFirstName) &&
+               Objects.equal(employeeLastName, csvImportRow.employeeLastName) &&
+               Objects.equal(lastUpdate, csvImportRow.lastUpdate);
     }
 
     @Override

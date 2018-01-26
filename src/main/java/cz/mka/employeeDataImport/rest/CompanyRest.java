@@ -1,10 +1,5 @@
 package cz.mka.employeeDataImport.rest;
 
-import cz.mka.employeeDataImport.api.CompanyService;
-import cz.mka.employeeDataImport.api.CsvProcessingService;
-import cz.mka.employeeDataImport.impl.jpa.Company;
-import cz.mka.employeeDataImport.rest.model.OutputCompany;
-import cz.mka.employeeDataImport.rest.model.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
+import cz.mka.employeeDataImport.api.CompanyService;
+import cz.mka.employeeDataImport.api.CsvProcessingService;
+import cz.mka.employeeDataImport.impl.jpa.Company;
+import cz.mka.employeeDataImport.rest.model.OutputCompany;
+import cz.mka.employeeDataImport.rest.model.Statistics;
 
 @Controller
 @RequestMapping(path = "/employee-processing")

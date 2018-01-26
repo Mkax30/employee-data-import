@@ -1,20 +1,18 @@
 package cz.mka.employeeDataImport.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import cz.mka.employeeDataImport.api.EmployeeService;
 import cz.mka.employeeDataImport.impl.dao.EmployeeDao;
 import cz.mka.employeeDataImport.impl.jpa.Employee;
 import cz.mka.employeeDataImport.impl.utils.DataConverter;
 import cz.mka.employeeDataImport.rest.model.OutputEmployee;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Created by Martin Kaspar on 11/02/2017.
- */
-@Component
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
